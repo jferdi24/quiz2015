@@ -15,7 +15,7 @@ local.properties
 .settings/
 .loadpath
 .env
-quiz.sqlite
+.sqlite
 
 # External tool builders
 .externalToolBuilders/
