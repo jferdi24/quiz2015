@@ -13,10 +13,24 @@ exports.load = function (req, res, next, quizId) {
 };
 //GET quizes
 exports.index = function (req, res) {
-    models.Quiz.findAll().then(function (quizes) {
-        res.render('quizes/index', { quizes: quizes });
-    }).catch(function (error) { next(error) });
+    console.log(req.query.search);
+    if (req.query.search !== "" && req.query.search !== undefined) {
+        var srch = req.query.search;
+        srch = srch.replace(/ /g, "%");
+        console.log(srch);
+        models.Quiz.findAll({ where: { pregunta: { $like: ('%' + srch + '%') } }, order:[['pregunta', 'ASC']] }).then(function (quizes) {
+            res.render('quizes/index', { quizes: quizes });
+        }).catch(function (error) { next(error) });
+    }
+    else if (req.query.search === undefined || req.query.search === "" ) {
+        models.Quiz.findAll().then(function (quizes) {
+            res.render('quizes/index', { quizes: quizes });
+        }).catch(function (error) { next(error) });
+    }    
 };
+
+
+
 //GET quizes/question
 exports.show = function (req, res) {
     models.Quiz.findById(req.params.quizId).then(function (quiz) {
