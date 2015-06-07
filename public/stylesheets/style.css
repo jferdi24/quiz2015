@@ -48,12 +48,17 @@ nav span {
     margin: 10px 5px;
 }
 
+#ErrorMsgs{
+    color:#ca3232;
+    font-size:smaller;
+}
+
 img{
     border-radius:5px;
     margin-top:10px;
 }
 
-input[type="text"],input[type="submit"]{
+input[type="text"],input[type="submit"],button[type="button"],button[type="submit"],select{
     color:#222;
     font-family: 'Open Sans', sans-serif;
     font-size:18px;
