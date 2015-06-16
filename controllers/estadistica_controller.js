@@ -9,7 +9,7 @@ exports.show = function (req, res,next) {
         sta2 = count; 
     }
     ).catch(function (error) { next(error) });
-    models.Comment.findAll( { group : 'QuizId'}).then(function (comments) {
+    models.Comment.count( { group : 'QuizId'}).then(function (comments) {
         sta5 = comments.length;
         sta4 = sta1 - sta5;
         sta3 = (sta2 / sta5).toFixed(4);
