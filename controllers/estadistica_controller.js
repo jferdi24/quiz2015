@@ -9,6 +9,10 @@ exports.show = function (req, res,next) {
         sta2 = count; 
     }
     ).catch(function (error) { next(error) });
+    //sequelize.query("SELECT * FROM Comments", { type: sequelize.QueryTypes.SELECT })
+    //    .then(function (Comments) {
+    //// We don't need spread here, since only the results will be returned for select queries
+    //});
     models.Comment.count( { group : 'QuizId'}).then(function (comments) {
         sta5 = comments.length;
         sta4 = sta1 - sta5;

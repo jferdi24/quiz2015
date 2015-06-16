@@ -7,6 +7,9 @@
         publicado: {
             type: DataTypes.BOOLEAN,
             defaultValue:false
+        },
+        QuizId: {
+            type: DataTypes.INTEGER
         }
     });
 };
