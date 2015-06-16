@@ -86,7 +86,7 @@ app.use(function (req, res, next) {
              req.session.marcatiempo = (new Date()).getTime();
             
         } else {
-            if ((new Date()).getTime() - req.session.marcatiempo > 10000) {//se pasó el tiempo y eliminamos la sesión (2min=120000ms)
+            if ((new Date()).getTime() - req.session.marcatiempo > 120000) {//se pasó el tiempo y eliminamos la sesión (2min=120000ms)
                 delete req.session.user;
                 delete req.session.marcatiempo;
                 //res.locals.session = req.session;
