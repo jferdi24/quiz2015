@@ -3,7 +3,7 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var commentController = require('../controllers/comment_controller');
 var sessionController = require('../controllers/session_controller');
-
+var estaController = require('../controllers/estadistica_controller');
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz' , errors:[]});
@@ -29,5 +29,6 @@ router.put('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish',sessionCont
 router.get('/author', function (req, res) {
     res.render('author', { errors: [] });
 });
+router.get('/quizes/statistics',estaController.show);
 
 module.exports = router;

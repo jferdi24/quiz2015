@@ -1,4 +1,5 @@
-﻿// MW de autorización de accesos HTTP restringidos
+﻿var path = require('path');
+// MW de autorización de accesos HTTP restringidos
 exports.loginRequired = function (req, res, next) {
     if (req.session.user) {
         next();
@@ -6,7 +7,6 @@ exports.loginRequired = function (req, res, next) {
         res.redirect('/login');
     }
 };
-
 // Get /login   -- Formulario de login
 exports.new = function (req, res) {
     var errors = req.session.errors || {};
@@ -27,17 +27,16 @@ exports.create = function (req, res) {
             req.session.errors = [{ "message": 'Se ha producido un error: ' + error }];
             res.redirect('/login');
             return;
-        }
-        
+        }        
         // Crear req.session.user y guardar campos   id  y  username
         // La sesión se define por la existencia de:    req.session.user
-        req.session.user = { id: user.id, username: user.username, isAdmin: user.isAdmin };        
-        res.redirect(req.session.redir.toString());// redirección a path anterior a login
+        req.session.user = { id: user.id, username: user.username, isAdmin: user.isAdmin };
+        res.redirect('/');// redirección a path anterior a loginreq.session.redir.toString()
     });
 };
 
 // DELETE /logout   -- Destruir sesion 
 exports.destroy = function (req, res) {
     delete req.session.user;
-    res.redirect(req.session.redir.toString()); // redirect a path anterior a login
+    res.redirect('/'); // redirect a path anterior a loginreq.session.redir.toString()
 };

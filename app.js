@@ -31,78 +31,75 @@ app.use(session({
  * */
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use('/', function (req, res, next) {    
+
+//app.use('/',function (req, res, next) {
 //    var now = new Date();
-//    var stamp = req.session.time ? new Date(req.session.time) : new Date();    
+//    var stamp = req.session.time ? new Date(req.session.time) : new Date();
 //    if (!req.path.match(/\/login|\/logout/)) {
-//        // validamos tiempo ultima peticion > 2 minutos
+//        req.session.redir = req.path;
 //        if ((now.getMinutes() - 2) > stamp.getMinutes()) {
+//            console.log('----');
+//            console.log("[]: Secion caducada");
+//            console.log('----');
+//            delete req.session.user;
 //            //var errors = req.session.errors || 'Sesión caducada ...';
 //            //req.session.errors = {};
-//            //res.render('views/sessions/new.ejs', {
-//            //    errors: errors
-//            //});
-//            delete req.session.user;
-//            res.redirect(req.session.redir.toString());
+//            //res.render('sessions/new.ejs', { errors: errors });
 //        } else {
+//            console.log('Normal');
 //            // refrescamos tiempo ultima peticion
-//            req.session.time = new Date();
 //            res.locals.session = req.session;
+//            req.session.time = new Date();
 //            next();
 //        }
 //    }
-//    next();
+//    else {
+//         console.log('Normal');
+//         res.locals.session = req.session;
+//         next();
+//    }
+//    //var stamp = req.session.time ? new Date(req.session.time) : new Date();
+//    //if (!req.path.match(/\/login|\/logout/)) {
+//    //    // validamos tiempo ultima peticion > 2 minutos
+//    //    if ((now.getMinutes() - 2) > stamp.getMinutes()) {
+//    //        var errors = req.session.errors || 'Sesión caducada ...';
+//    //        req.session.errors = {};
+//    //        res.render('views/sessions/new.ejs', { errors: errors });
 
-//}, routes);
-app.use('/',function (req, res, next) {
-    var now = new Date();
-    var stamp = req.session.time ? new Date(req.session.time) : new Date();
-    if (!req.path.match(/\/login|\/logout/)) {
-        req.session.redir = req.path;
-        if ((now.getMinutes() - 2) > stamp.getMinutes()) {
-            //delete req.session.user;
-            console.log('----');
-            console.log("[]: Secion caducada");
-            console.log('----');
-            res.locals.session = req.session;
-            var errors = req.session.errors || 'Sesión caducada ...';
-            req.session.errors = {};
-            res.render('sessions/new.ejs', { errors: errors });
-        } else {
-            console.log('Normal');
-            // refrescamos tiempo ultima peticion
-            res.locals.session = req.session;
-            req.session.time = new Date();
-            next();
-        }
-    }
-    else {
-         console.log('Normal');
-         res.locals.session = req.session;
-         next();
-    }
-    //var stamp = req.session.time ? new Date(req.session.time) : new Date();
-    //if (!req.path.match(/\/login|\/logout/)) {
-    //    // validamos tiempo ultima peticion > 2 minutos
-    //    if ((now.getMinutes() - 2) > stamp.getMinutes()) {
-    //        var errors = req.session.errors || 'Sesión caducada ...';
-    //        req.session.errors = {};
-    //        res.render('views/sessions/new.ejs', { errors: errors });
-
-    //    } else {
-    //        // refrescamos tiempo ultima peticion
-    //        res.locals.session = req.session;
-    //        req.session.time = new Date();
-    //        next();
-    //    }
-    //} 
-    ////else {
-    ////    next();
-    ////}
+//    //    } else {
+//    //        // refrescamos tiempo ultima peticion
+//    //        res.locals.session = req.session;
+//    //        req.session.time = new Date();
+//    //        next();
+//    //    }
+//    //} 
+//    ////else {
+//    ////    next();
+//    ////}
    
-}, routes);
+//}, routes);
 
-//app.use('/', routes);
+app.use(function (req, res, next) {
+    if (req.session.user) {// si estamos en una sesion
+        if (!req.session.marcatiempo) {//primera vez se pone la marca de tiempo
+             req.session.marcatiempo = (new Date()).getTime();
+            
+        } else {
+            if ((new Date()).getTime() - req.session.marcatiempo > 120000) {//se pasó el tiempo y eliminamos la sesión (2min=120000ms)
+                delete req.session.user;     //eliminamos el usuario
+                res.redirect('/');
+                //res.locals.session = req.session;  req.session.redir.toString()              
+            } else {//hay actividad se pone nueva marca de tiempo
+                 req.session.marcatiempo = (new Date()).getTime();   
+               // res.locals.session = req.session;           
+            }            
+        }        
+    }
+    res.locals.session = req.session;
+    next();
+},routes);
+
+app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
