@@ -12,7 +12,7 @@ exports.load = function (req, res, next, quizId) {
     ).catch(function (error) { next(error) });
 };
 //GET quizes
-exports.index = function (req, res) {
+exports.index = function (req, res,next) {
     console.log(req.query.search);
     if (req.query.search !== "" && req.query.search !== undefined) {
         var srch = req.query.search;
@@ -75,7 +75,7 @@ exports.edit = function (req, res) {
 };
 
 // Delete quizes/:id/edit
-exports.destroy = function (req, res) {
+exports.destroy = function (req, res,next) {
     req.quiz.destroy().then(function () {
         res.redirect('/quizes');
     }).catch(function (error) { next(error) });
