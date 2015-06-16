@@ -13,7 +13,7 @@ exports.show = function (req, res,next) {
     //    .then(function (Comments) {
     //// We don't need spread here, since only the results will be returned for select queries
     //});
-    models.Comment.count( { group : 'QuizId'}).then(function (comments) {
+    models.Comment.count( { group : '"QuizId"'}).then(function (comments) {
         sta5 = comments.length;
         sta4 = sta1 - sta5;
         sta3 = (sta2 / sta5).toFixed(4);

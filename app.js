@@ -8,6 +8,7 @@ var partials = require('express-partials');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var routes = require('./routes/index');
+var sessionController = require('./controllers/session_controller');
 
 var app = express();
 
@@ -85,19 +86,20 @@ app.use(function (req, res, next) {
              req.session.marcatiempo = (new Date()).getTime();
             
         } else {
-            if ((new Date()).getTime() - req.session.marcatiempo > 120000) {//se pasó el tiempo y eliminamos la sesión (2min=120000ms)
-                delete req.session.user;     //eliminamos el usuario
-                res.redirect('/');
+            if ((new Date()).getTime() - req.session.marcatiempo > 10000) {//se pasó el tiempo y eliminamos la sesión (2min=120000ms)
+                delete req.session.user;
+                delete req.session.marcatiempo;
+                //res.locals.session = req.session;
                 //res.locals.session = req.session;  req.session.redir.toString()              
             } else {//hay actividad se pone nueva marca de tiempo
                  req.session.marcatiempo = (new Date()).getTime();   
-               // res.locals.session = req.session;           
+                    //res.locals.session = req.session;           
             }            
         }        
     }
     res.locals.session = req.session;
     next();
-},routes);
+});
 
 app.use('/', routes);
 
